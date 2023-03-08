@@ -17,6 +17,10 @@ public:
         m_turretShape.setTexture(&m_texture);
 
         m_turretShape.setPosition(position);
+
+        if (m_rotateSound.openFromFile(m_rotateSoundFilePath.data())) {
+            LOG(ERROR) << m_rotateSoundFilePath.data() << " is not found";
+        }
     }
 
     void update(const sf::Vector2f & mousePosition, const sf::Vector2f & position) {
@@ -27,9 +31,14 @@ public:
         float dy = mousePosition.y - getPosition().y;
         float angle = std::atan2(dy, dx) * 180.0f / static_cast<float>(M_PI);
 
+        if (m_directionVector.angle == angle) {
+            return;
+        }
+        
         // Rotate the turret to face the mouse cursor
         m_turretShape.setRotation(angle);
         m_directionVector.angle = angle;
+        playSound();
     }
 
     void draw(sf::RenderWindow &window) const {
@@ -40,10 +49,6 @@ public:
         return m_turretShape.getPosition();
     }
 
-    void setPosition(const sf::Vector2f &position) {
-        m_turretShape.setPosition(position);
-    }
-
     [[nodiscard]] sf::RectangleShape & getShape() {
         return m_turretShape;
     }
@@ -52,12 +57,23 @@ public:
         return m_directionVector;
     }
 
+    void playSound() {
+        if (m_rotateSound.getStatus() == sf::SoundSource::Playing) {
+            return;
+        }
+        m_rotateSound.stop();
+        m_rotateSound.play();
+    }
+
 private:
     PolarVector m_directionVector = {1.0f, 0.0f};
 
     sf::Texture m_texture;
 
     sf::Sprite m_sprite;
+
+    std::string_view m_rotateSoundFilePath = "resources/Wav/tank_tower.wav";
+    sf::Music m_rotateSound;
 
     sf::RectangleShape m_turretShape;
 };
