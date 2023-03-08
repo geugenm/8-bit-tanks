@@ -12,8 +12,9 @@ public:
     }
 
 
-    void update(float deltaTime) {
-        m_shape.setPosition(m_shape.getPosition() + m_velocity * deltaTime);
+    void update() {
+        m_shape.setPosition(m_shape.getPosition() + m_velocity * m_clock.getElapsedTime().asSeconds());
+        m_clock.restart();
     }
 
     [[nodiscard]] bool isOnTheScreen() const {
@@ -55,7 +56,7 @@ public:
 protected:
     void setBulletSpeed(const float &speed) {
         if (speed <= 0.0f) {
-            throw std::invalid_argument("Invalid projectile speed given");
+            throw std::invalid_argument("Invalid projectile m_speed given");
         }
 
         const float dx = m_target.x - m_start.x;
@@ -97,13 +98,14 @@ private:
     sf::SoundBuffer m_buffer;
     std::string_view m_soundPath = "";
 
+    sf::Clock m_clock;
 
     sf::Vector2f m_velocity;
 
     sf::Vector2f m_target;
     sf::Vector2f m_start;
 
-    float m_bulletSpeed;
+    float m_bulletSpeed = DEFAULT_PROJECTILE_SPEED;
 };
 
 
@@ -116,7 +118,7 @@ public:
     }
 
 public:
-    constexpr static float DEFAULT_SPEED = 10000.0f;
+    constexpr static float DEFAULT_SPEED = 1000.0f;
 };
 
 class Shell final : public Projectile {
@@ -128,7 +130,7 @@ public:
     }
 
 public:
-    constexpr static float DEFAULT_SPEED = 1000.0f;
+    constexpr static float DEFAULT_SPEED = 500.0f;
 };
 
 

@@ -9,7 +9,7 @@ public:
             throw std::invalid_argument("No texture for cursor given.");
         }
 
-        m_shape = sf::CircleShape(10.0f);
+        m_shape = sf::CircleShape(20.0f);
         m_shape.setOrigin(m_shape.getRadius(), m_shape.getRadius());
         m_shape.setTexture(&m_texture);
     }

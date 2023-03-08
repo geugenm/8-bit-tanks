@@ -47,8 +47,8 @@ public:
 
     void handleInputs() {
         using namespace Configuration;
-        float speed = 1.0f;
-        sf::Vector2f changeVector = m_directionVector.getDecartVector() * speed;
+
+        sf::Vector2f changeVector = m_directionVector.getDecartVector() * m_speed;
 
         if (sf::Keyboard::isKeyPressed(Controls::FORWARD)) {
             m_shape.move(changeVector.x, changeVector.y);
@@ -80,6 +80,9 @@ public:
     [[nodiscard]] PolarVector getDirectionVector() const {
         return m_directionVector;
     }
+
+public:
+    constexpr static float m_speed = 1.0f;
 
 private:
     sf::Music m_tankMovementSound;

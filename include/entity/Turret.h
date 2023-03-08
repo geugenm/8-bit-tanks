@@ -19,7 +19,9 @@ public:
         m_turretShape.setPosition(position);
     }
 
-    void update(const sf::Vector2f & mousePosition) {
+    void update(const sf::Vector2f & mousePosition, const sf::Vector2f & position) {
+        m_turretShape.setPosition(position);
+
         // Calculate the angle between the turret and the mouse cursor
         float dx = mousePosition.x - getPosition().x;
         float dy = mousePosition.y - getPosition().y;
@@ -42,7 +44,7 @@ public:
         m_turretShape.setPosition(position);
     }
 
-    [[nodiscard]] sf::RectangleShape getShape() const {
+    [[nodiscard]] sf::RectangleShape & getShape() {
         return m_turretShape;
     }
 

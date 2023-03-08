@@ -27,9 +27,11 @@ public:
         Shell shellZero(tank.getTankCenterCoordinates(), tank.getTankCenterCoordinates());
         std::vector<Shell> shells;
         std::vector<MachineGun> bullets;
+        Turret turret(tank.getTankCenterCoordinates());
 
         sf::Clock clock;
-        sf::Clock soundBulletClock;
+        sf::Clock shellClock;
+        sf::Clock bulletClock;
 
         while (m_window.isOpen()) {
             sf::Event event{};
@@ -39,39 +41,35 @@ public:
                 }
             }
 
-            Turret turret(tank.getTankCenterCoordinates());
-
             auto mousePosition = sf::Vector2f(sf::Mouse::getPosition(m_window));
 
-            turret.update(mousePosition);
+            turret.update(mousePosition, tank.getTankCenterCoordinates());
 
             cursor.setPosition(mousePosition);
 
             tank.handleInputs();
 
-
-
             const float firePeriod = 1.0f;
             if (sf::Mouse::isButtonPressed(Configuration::Controls::MAIN_WEAPON)) {
-                if (soundBulletClock.getElapsedTime().asSeconds() > firePeriod) {
+                if (shellClock.getElapsedTime().asSeconds() > firePeriod) {
                     shellZero.playSound();
                     Shell shell(Shell(turret.getPosition(), mousePosition));
                     shells.push_back(shell);
-                    soundBulletClock.restart();
+                    shellClock.restart();
                 }
             }
 
             const float mainFirePeriod = 0.1f;
             if (sf::Mouse::isButtonPressed(Configuration::Controls::ALTERNATIVE_WEAPON)) {
-                if (soundBulletClock.getElapsedTime().asSeconds() > mainFirePeriod) {
+                if (bulletClock.getElapsedTime().asSeconds() > mainFirePeriod) {
                     bulletZero.playSound();
                     bullets.push_back(MachineGun(turret.getPosition(), mousePosition));
-                    soundBulletClock.restart();
+                    bulletClock.restart();
                 }
             }
 
             for (auto bulletIter = shells.begin(); bulletIter != shells.end();) {
-                bulletIter->update(clock.getElapsedTime().asSeconds());
+                bulletIter->update();
 
                 if (bulletIter->isOnTheScreen() == false) {
                     bulletIter = shells.erase(bulletIter);
@@ -81,7 +79,7 @@ public:
             }
 
             for (auto bulletIter = bullets.begin(); bulletIter != bullets.end();) {
-                bulletIter->update(clock.getElapsedTime().asSeconds());
+                bulletIter->update();
 
                 if (bulletIter->isOnTheScreen() == false) {
                     bulletIter = bullets.erase(bulletIter);
@@ -90,16 +88,10 @@ public:
                 }
             }
 
-            DirectionVector tankDirectionVector(tank.getTankCenterCoordinates(), tank.getTankCenterCoordinates() +
-                                                                                 tank.getDirectionVector().getDecartVector() *
-                                                                                 100.0f, sf::Color::Red);
-            DirectionVector targetDirectionVector(turret.getShape().getPosition(), sf::Vector2f(mousePosition),
-                                                  sf::Color::Green);
-
 
             m_window.clear();
-            m_window.draw(tank.getShape());
             m_window.draw(cursor.getShape());
+            m_window.draw(tank.getShape());
             turret.draw(m_window);
 
             for (auto bullet: bullets) {
@@ -110,9 +102,6 @@ public:
                 m_window.draw(shell.getShape());
             }
 
-            //m_window.draw(tankDirectionVector.getShape());
-            //m_window.draw(targetDirectionVector.getShape());
-
             m_window.display();
 
             clock.restart();
@@ -122,7 +111,7 @@ public:
 private:
     sf::RenderWindow m_window = sf::RenderWindow(
             sf::VideoMode(Configuration::MainWindow::WIDTH, Configuration::MainWindow::HEIGHT),
-            Configuration::MainWindow::TITLE);
+            Configuration::MainWindow::TITLE.data());
 
     sf::Clock m_clock;
 };

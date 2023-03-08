@@ -7,7 +7,7 @@ namespace Configuration {
         constexpr static uint32_t WIDTH = 1920;
         constexpr static uint32_t HEIGHT = 1080;
 
-        constexpr static char* TITLE = "8bitTanksGame";
+        constexpr static std::string_view TITLE = "8bitTanksGame";
         constexpr static uint16_t FPS_LIMIT = 60;
     };
 
