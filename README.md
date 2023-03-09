@@ -11,10 +11,22 @@ This is a tank game developed using SFML and C++17. The game involves moving a t
     Score tracking
 
 ## Installation
+Clone this repository using `git clone https://github.com/geugenm/8bitTanks.git`
+Install SFML and C++17 if they are not already installed
+Build the game using CMake: 
 
-    Clone this repository using `git clone https://github.com/geugenm/8bitTanks.git`
-    Install SFML and C++17 if they are not already installed
-    Build the game using CMake
+    mkdir build
+
+    cd build
+
+    cmake ..
+
+    make
+    
+    cd ..
+    
+    ./build/geugenm.8bitTanks
+    
 
 ## Usage
 
