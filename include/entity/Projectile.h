@@ -109,9 +109,9 @@ private:
 };
 
 
-class MachineGun final : public Projectile {
+class Bullet final : public Projectile {
 public:
-    MachineGun(const sf::Vector2f &launch, const sf::Vector2f &target) : Projectile(launch, target) {
+    Bullet(const sf::Vector2f &launch, const sf::Vector2f &target) : Projectile(launch, target) {
         setSound("resources/Wav/mini_gun2.wav");
 
         setBulletSpeed(DEFAULT_SPEED);

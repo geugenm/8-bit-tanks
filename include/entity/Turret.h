@@ -18,7 +18,7 @@ public:
 
         m_turretShape.setPosition(position);
 
-        if (!m_rotateSound.openFromFile(m_rotateSoundFilePath.data())) {
+        if (m_rotateSound.openFromFile(m_rotateSoundFilePath.data())) {
             LOG(ERROR) << m_rotateSoundFilePath.data() << " is not found";
         }
     }

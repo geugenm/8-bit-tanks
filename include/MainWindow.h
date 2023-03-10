@@ -8,6 +8,7 @@
 #include "Config.h"
 #include "Cursor.h"
 #include <SFML/Audio.hpp>
+#include <list>
 
 
 class Window {
@@ -19,19 +20,7 @@ public:
     void run() {
         m_window.setMouseCursorVisible(false);
 
-        Tank tank;
-
-        Cursor cursor;
-
-        MachineGun bulletZero(tank.getTankCenterCoordinates(), tank.getTankCenterCoordinates());
-        Shell shellZero(tank.getTankCenterCoordinates(), tank.getTankCenterCoordinates());
-        std::vector<Shell> shells;
-        std::vector<MachineGun> bullets;
-        Turret turret(tank.getTankCenterCoordinates());
-
-        sf::Clock clock;
-        sf::Clock shellClock;
-        sf::Clock bulletClock;
+        Turret turret(m_tank.getTankCenterCoordinates());
 
         while (m_window.isOpen()) {
             sf::Event event{};
@@ -43,68 +32,54 @@ public:
 
             auto mousePosition = sf::Vector2f(sf::Mouse::getPosition(m_window));
 
-            turret.update(mousePosition, tank.getTankCenterCoordinates());
+            turret.update(mousePosition, m_tank.getTankCenterCoordinates());
 
-            cursor.setPosition(mousePosition);
+            m_cursor.setPosition(mousePosition);
 
-            tank.handleInputs();
+            m_tank.handleInputs();
+
+            const size_t projectileSizeBeforeShoot = m_projectiles.size();
 
             const float firePeriod = 1.0f;
             if (sf::Mouse::isButtonPressed(Configuration::Controls::MAIN_WEAPON)) {
-                if (shellClock.getElapsedTime().asSeconds() > firePeriod) {
-                    shellZero.playSound();
-                    Shell shell(Shell(turret.getPosition(), mousePosition));
-                    shells.push_back(shell);
-                    shellClock.restart();
+                if (m_shellClock.getElapsedTime().asSeconds() > firePeriod) {
+                    m_projectiles.push_front(new Shell(turret.getPosition(), mousePosition));
                 }
             }
 
             const float mainFirePeriod = 0.1f;
             if (sf::Mouse::isButtonPressed(Configuration::Controls::ALTERNATIVE_WEAPON)) {
-                if (bulletClock.getElapsedTime().asSeconds() > mainFirePeriod) {
-                    bulletZero.playSound();
-                    bullets.push_back(MachineGun(turret.getPosition(), mousePosition));
-                    bulletClock.restart();
+                if (m_bulletClock.getElapsedTime().asSeconds() > mainFirePeriod) {
+                    m_projectiles.push_front(new Bullet(turret.getPosition(), mousePosition));
                 }
             }
 
-            for (auto bulletIter = shells.begin(); bulletIter != shells.end();) {
-                bulletIter->update();
-
-                if (bulletIter->isOnTheScreen() == false) {
-                    bulletIter = shells.erase(bulletIter);
-                } else {
-                    ++bulletIter;
-                }
+            if (m_projectiles.size() != projectileSizeBeforeShoot) {
+                m_shellClock.restart();
+                m_bulletClock.restart();
+                m_projectiles.front()->playSound();
             }
 
-            for (auto bulletIter = bullets.begin(); bulletIter != bullets.end();) {
-                bulletIter->update();
-
-                if (bulletIter->isOnTheScreen() == false) {
-                    bulletIter = bullets.erase(bulletIter);
-                } else {
-                    ++bulletIter;
-                }
+            for (const auto& projectile : m_projectiles) {
+                projectile->update();
             }
 
+            while (!m_projectiles.empty() && !m_projectiles.front()->isOnTheScreen()) {
+                m_projectiles.pop_front();
+            }
 
             m_window.clear();
-            m_window.draw(cursor.getShape());
-            m_window.draw(tank.getShape());
+            m_window.draw(m_cursor.getShape());
+            m_window.draw(m_tank.getShape());
             turret.draw(m_window);
 
-            for (auto bullet: bullets) {
-                m_window.draw(bullet.getShape());
-            }
-
-            for (auto shell: shells) {
-                m_window.draw(shell.getShape());
+            for (const auto& projectile : m_projectiles) {
+                m_window.draw(projectile->getShape());
             }
 
             m_window.display();
 
-            clock.restart();
+            m_clock.restart();
         }
     }
 
@@ -114,4 +89,13 @@ private:
             Configuration::MainWindow::TITLE.data());
 
     sf::Clock m_clock;
+
+    sf::Clock m_shellClock;
+    sf::Clock m_bulletClock;
+
+    Tank m_tank;
+
+    Cursor m_cursor;
+
+    std::list<Projectile *> m_projectiles;
 };
