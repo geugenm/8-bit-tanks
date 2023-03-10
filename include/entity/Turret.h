@@ -1,79 +1,115 @@
 #pragma once
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 #include <cmath>
+
 #include "MovementVectors.h"
+#include "Hull.h"
 
 class Turret {
 public:
-    explicit Turret(const sf::Vector2f & position) {
-        if (!m_texture.loadFromFile("resources/textures/turret.png")) {
-            throw std::invalid_argument("No texture for turret");
-        }
+    const Hull & kAttachedHull;
 
-        m_turretShape.setSize((sf::Vector2f(65, 35)));
-        m_turretShape.setOrigin(m_turretShape.getSize() / 2.f);
+    const sf::Window & kAttachedWindow;
 
-        m_turretShape.setTexture(&m_texture);
 
-        m_turretShape.setPosition(position);
+    explicit Turret(const Hull & hull, const sf::Window & window) : kAttachedHull(hull), kAttachedWindow(window) {
+        setTexture("resources/textures/turret.png");
+        buildSprite();
 
-        if (m_rotateSound.openFromFile(m_rotateSoundFilePath.data())) {
-            LOG(ERROR) << m_rotateSoundFilePath.data() << " is not found";
-        }
+        setSound("resources/Wav/tank_tower.wav");
     }
 
-    void update(const sf::Vector2f & mousePosition, const sf::Vector2f & position) {
-        m_turretShape.setPosition(position);
+    void update() {
+        m_sprite.setPosition(kAttachedHull.getSprite().getPosition());
 
         // Calculate the angle between the turret and the mouse cursor
-        float dx = mousePosition.x - getPosition().x;
-        float dy = mousePosition.y - getPosition().y;
-        float angle = std::atan2(dy, dx) * 180.0f / static_cast<float>(M_PI);
+        const auto mousePosition = sf::Vector2f(sf::Mouse::getPosition(kAttachedWindow));
+        const sf::Vector2f delta(mousePosition - getPosition());
+        const float angle = std::atan2(delta.y, delta.x) * 180.0f / static_cast<float>(M_PI);
 
-        if (m_directionVector.angle == angle) {
-            return;
-        }
-        
-        // Rotate the turret to face the mouse cursor
-        m_turretShape.setRotation(angle);
-        m_directionVector.angle = angle;
+        m_isRotating = m_directionVector.angle != angle;
+
+        rotate(angle);
         playSound();
     }
 
     void draw(sf::RenderWindow &window) const {
-        window.draw(m_turretShape);
+        window.draw(m_sprite);
+    }
+
+    [[nodiscard]] sf::Vector2f getMuzzlePosition() const {
+        PolarVector vector = m_directionVector;
+        vector.radius *= m_texture.getSize().x * m_sprite.getScale().x / 2.f;
+        return getPosition() + vector.getDecartVector();
     }
 
     [[nodiscard]] sf::Vector2f getPosition() const {
-        return m_turretShape.getPosition();
+        return m_sprite.getPosition();
     }
 
-    [[nodiscard]] sf::RectangleShape & getShape() {
-        return m_turretShape;
+    [[nodiscard]] sf::Sprite & getSprite() {
+        return m_sprite;
     }
 
-    [[nodiscard]] PolarVector getDirectionVector() const {
-        return m_directionVector;
+private:
+    void setTexture(const std::string_view & path) {
+        if (!m_texture.loadFromFile(path.data())) {
+            LOG(ERROR) << "Missing texture for turret: " << path;
+            return;
+        }
+
+        m_sprite.setTexture(m_texture);
     }
 
     void playSound() {
+        if (m_isRotating == false) {
+            m_rotateSound.stop();
+            return;
+        }
+
         if (m_rotateSound.getStatus() == sf::SoundSource::Playing) {
             return;
         }
+
         m_rotateSound.stop();
         m_rotateSound.play();
     }
 
-private:
+    void buildSprite() {
+        m_sprite.setScale(Hull::kSpriteScale, Hull::kSpriteScale);
+        m_sprite.setOrigin(sf::Vector2f(m_texture.getSize() / 2u));
+
+        m_sprite.setPosition(kAttachedHull.getSprite().getPosition());
+    }
+
+    void setSound(const std::string_view & path) {
+        if (m_rotateSoundBuffer.loadFromFile(path.data())) {
+            LOG(ERROR) << "Missing turret rotation sound file: " << path;
+            return;
+        }
+        m_rotateSound.setBuffer(m_rotateSoundBuffer);
+    }
+
+    void rotate(const float & angle) {
+        if (m_isRotating == false) {
+            return;
+        }
+
+        m_sprite.setRotation(angle);
+
+        m_directionVector.angle = angle;
+    }
+
     PolarVector m_directionVector = {1.0f, 0.0f};
 
     sf::Texture m_texture;
 
+    sf::SoundBuffer m_rotateSoundBuffer;
+
+    sf::Sound m_rotateSound;
+
+    bool m_isRotating = false;
+
     sf::Sprite m_sprite;
-
-    std::string_view m_rotateSoundFilePath = "resources/Wav/tank_tower.wav";
-    sf::Music m_rotateSound;
-
-    sf::RectangleShape m_turretShape;
 };

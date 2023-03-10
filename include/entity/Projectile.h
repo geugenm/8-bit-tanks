@@ -42,7 +42,7 @@ public:
         return m_bulletSpeed;
     }
 
-    void playSound() {
+    void playSound() const {
         static sf::Sound sound;
         sound.setBuffer(m_buffer);
         sound.play();
@@ -56,7 +56,7 @@ public:
 protected:
     void setBulletSpeed(const float &speed) {
         if (speed <= 0.0f) {
-            throw std::invalid_argument("Invalid projectile m_speed given");
+            throw std::invalid_argument("Invalid projectile kDefaultMovementSpeed given");
         }
 
         const float dx = m_target.x - m_start.x;

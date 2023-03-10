@@ -4,7 +4,7 @@
 #include "entity/Projectile.h"
 #include "entity/Turret.h"
 #include "MovementVectors.h"
-#include "entity/Tank.h"
+#include "entity/Hull.h"
 #include "Config.h"
 #include "Cursor.h"
 #include <SFML/Audio.hpp>
@@ -20,7 +20,7 @@ public:
     void run() {
         m_window.setMouseCursorVisible(false);
 
-        Turret turret(m_tank.getTankCenterCoordinates());
+        Turret turret(m_tank, m_window);
 
         while (m_window.isOpen()) {
             sf::Event event{};
@@ -30,9 +30,13 @@ public:
                 }
             }
 
+            if (m_window.hasFocus() == false) {
+                continue;
+            }
+
             auto mousePosition = sf::Vector2f(sf::Mouse::getPosition(m_window));
 
-            turret.update(mousePosition, m_tank.getTankCenterCoordinates());
+            turret.update();
 
             m_cursor.setPosition(mousePosition);
 
@@ -43,7 +47,7 @@ public:
             const float firePeriod = 1.0f;
             if (sf::Mouse::isButtonPressed(Configuration::Controls::MAIN_WEAPON)) {
                 if (m_shellClock.getElapsedTime().asSeconds() > firePeriod) {
-                    m_projectiles.push_front(new Shell(turret.getPosition(), mousePosition));
+                    m_projectiles.push_front(new Shell(turret.getMuzzlePosition(), mousePosition));
                 }
             }
 
@@ -69,9 +73,10 @@ public:
             }
 
             m_window.clear();
-            m_window.draw(m_cursor.getShape());
-            m_window.draw(m_tank.getShape());
+            m_window.draw(m_tank.getSprite());
             turret.draw(m_window);
+
+            m_window.draw(m_cursor.getSprite());
 
             for (const auto& projectile : m_projectiles) {
                 m_window.draw(projectile->getShape());
@@ -93,7 +98,7 @@ private:
     sf::Clock m_shellClock;
     sf::Clock m_bulletClock;
 
-    Tank m_tank;
+    Hull m_tank;
 
     Cursor m_cursor;
 

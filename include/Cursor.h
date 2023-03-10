@@ -5,25 +5,36 @@
 class Cursor {
 public:
     Cursor() {
-        if (!m_texture.loadFromFile("resources/cursor/attack.png")) {
-            throw std::invalid_argument("No texture for cursor given.");
-        }
-
-        m_shape = sf::CircleShape(20.0f);
-        m_shape.setOrigin(m_shape.getRadius(), m_shape.getRadius());
-        m_shape.setTexture(&m_texture);
+        setTexture("resources/cursor/attack.png");
+        buildSprite();
     }
 
     void setPosition(const sf::Vector2f &position) {
-        m_shape.setPosition(position);
+        m_sprite.setPosition(position);
     }
 
-    [[nodiscard]] sf::CircleShape getShape() const {
-        return m_shape;
+    [[nodiscard]] sf::Sprite getSprite() const {
+        return m_sprite;
     }
 
 private:
-    sf::CircleShape m_shape;
+    void setTexture(const std::string_view & path) {
+        if (!m_texture.loadFromFile(path.data())) {
+            LOG(ERROR) << "Invalid cursor sprite: " << path;
+            return;
+        }
+    }
+
+    void buildSprite() {
+        const sf::Vector2f halfOfTheTexture(m_texture.getSize() / 2u);
+
+        m_sprite.setOrigin(halfOfTheTexture);
+        m_sprite.setScale(0.015f, 0.015f);
+        m_sprite.setTexture(m_texture);
+    }
+
+private:
+    sf::Sprite m_sprite;
 
     sf::Texture m_texture;
 };

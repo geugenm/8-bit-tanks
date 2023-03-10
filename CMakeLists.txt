@@ -21,7 +21,7 @@ target_include_directories(lib.easyloggingpp PUBLIC ${EASYLOGGINGPP_INCLUDE_DIR}
 
 
 # Add executable and link with SFML and easyloggingpp libraries
-add_executable(${PROJECT_NAME} sources/Main.cpp include/entity/Projectile.h include/entity/Turret.h include/MovementVectors.h include/Config.h include/entity/Tank.h include/Cursor.h include/MainWindow.h)
+add_executable(${PROJECT_NAME} sources/Main.cpp include/entity/Projectile.h include/entity/Turret.h include/MovementVectors.h include/Config.h include/entity/Hull.h include/Cursor.h include/MainWindow.h)
 
 target_link_libraries(${PROJECT_NAME} sfml-system sfml-window sfml-graphics sfml-audio)
 target_link_libraries(${PROJECT_NAME} lib.easyloggingpp)
