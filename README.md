@@ -25,7 +25,7 @@ Build the game using CMake:
     
     cd ..
     
-    ./build/geugenm.8bitTanks
+    ./build/game
     
 
 ## Usage
