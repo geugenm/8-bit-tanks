@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22.1)
 
-project(game VERSION 1.0.0 LANGUAGES CXX C)
+project(game VERSION 1.0.1 LANGUAGES CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -28,5 +28,5 @@ target_link_libraries(${PROJECT_NAME} lib.easyloggingpp)
 
 add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_SOURCE_DIR}/ $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+        ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
 
