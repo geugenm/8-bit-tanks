@@ -4,34 +4,16 @@
 
 class Cursor {
 public:
-    Cursor() {
-        setTexture("resources/cursor/attack.png");
-        buildSprite();
-    }
+    Cursor();
 
-    void setPosition(const sf::Vector2f &position) {
-        m_sprite.setPosition(position);
-    }
+    void setPosition(const sf::Vector2f &position);
 
-    [[nodiscard]] sf::Sprite getSprite() const {
-        return m_sprite;
-    }
+    [[nodiscard]] sf::Sprite getSprite() const;
 
 private:
-    void setTexture(const std::string_view & path) {
-        if (!m_texture.loadFromFile(path.data())) {
-            LOG(ERROR) << "Invalid cursor sprite: " << path;
-            return;
-        }
-    }
+    void loadTexture(const std::string_view & path);
 
-    void buildSprite() {
-        const sf::Vector2f halfOfTheTexture(m_texture.getSize() / 2u);
-
-        m_sprite.setOrigin(halfOfTheTexture);
-        m_sprite.setScale(0.015f, 0.015f);
-        m_sprite.setTexture(m_texture);
-    }
+    void buildSprite();
 
 private:
     sf::Sprite m_sprite;

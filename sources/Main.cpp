@@ -6,7 +6,9 @@ INITIALIZE_EASYLOGGINGPP
 
 
 int main(int argc, char **argv) {
-    Window window;
+    LOG(INFO) << "Launched with '" << argc << "' parameter(s): " << argv[0];
+
+    MainWindow window;
     window.run();
 
     LOG(INFO) << "Exited.";

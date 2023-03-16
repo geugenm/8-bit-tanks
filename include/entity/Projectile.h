@@ -1,136 +1,62 @@
 #include <cmath>
 #include <Config.h>
 #include <SFML/Audio.hpp>
-#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics.hpp>
 
 class Projectile {
 public:
-    explicit Projectile(const sf::Vector2f &launch, const sf::Vector2f &target) : m_target(target), m_start(launch) {
-        buildShape(launch);
-
-        setBulletSpeed(DEFAULT_PROJECTILE_SPEED);
-    }
+    constexpr static float kDefaultProjectileSpeed = 10.0f;
 
 
-    void update() {
-        m_shape.setPosition(m_shape.getPosition() + m_velocity * m_clock.getElapsedTime().asSeconds());
-        m_clock.restart();
-    }
+    explicit Projectile(const sf::Vector2f &launch, const sf::Vector2f &target);
 
-    [[nodiscard]] bool isOnTheScreen() const {
-        const bool widthCondition =
-                getShapePosition().x < 0.0f || getShapePosition().x > Configuration::MainWindow::WIDTH;
-        const bool heightCondition =
-                getShapePosition().y < 0.0f || getShapePosition().y > Configuration::MainWindow::HEIGHT;
 
-        if (widthCondition || heightCondition) {
-            return false;
-        }
+    void updatePosition();
 
-        return true;
-    }
+    [[nodiscard]] bool isWithinScreenBounds() const;
 
-    [[nodiscard]] sf::Vector2f getShapePosition() const {
-        return m_shape.getPosition();
-    }
+    [[nodiscard]] sf::Vector2f getPosition() const;
 
-    sf::RectangleShape &getShape() {
-        return m_shape;
-    }
-
-    [[nodiscard]] float getBulletSpeed() const {
-        return m_bulletSpeed;
-    }
-
-    void playSound() const {
-        static sf::Sound sound;
-        sound.setBuffer(m_buffer);
-        sound.play();
-    }
+    sf::RectangleShape &getShapeObject();
 
     virtual ~Projectile() = default;
 
-public:
-    constexpr static float DEFAULT_PROJECTILE_SPEED = 10.0f;
-
 protected:
-    void setBulletSpeed(const float &speed) {
-        if (speed <= 0.0f) {
-            throw std::invalid_argument("Invalid projectile kDefaultMovementSpeed given");
-        }
+    void playShotSound();
 
-        const float dx = m_target.x - m_start.x;
-        const float dy = m_target.y - m_start.y;
-        const float length = std::sqrt(dx * dx + dy * dy);
-        m_velocity = sf::Vector2f(dx / length * speed, dy / length * speed);
+    void setSpeed(const float &speed);
 
-        m_bulletSpeed = speed;
-    }
+    void setSound(const std::string_view &path);
 
-    void setSound(const std::string_view &path) {
-        if (m_buffer.loadFromFile(path.data()) == false) {
-            LOG(INFO) << "Sound file is not found" << path;
-        }
-        m_soundPath = path;
-    }
-
-    void setTexture(const std::string_view &path) {
-        if (m_texture.loadFromFile(path.data()) == false) {
-            LOG(INFO) << "Sound file is not found" << path;
-        }
-        m_shape.setTexture(&m_texture);
-
-        m_texturePath = path;
-    }
-
-    void buildShape(const sf::Vector2f &shapePosition) {
-        m_shape.setSize(sf::Vector2f(10.0f, 10.0f));
-        m_shape.setFillColor(sf::Color::Red);
-        m_shape.setPosition(shapePosition.x, shapePosition.y);
-    }
+    void createShapeObject(const sf::Vector2f &shapePosition);
 
 private:
-    sf::RectangleShape m_shape;
+    sf::RectangleShape m_projectileShape;
 
-    sf::Texture m_texture;
-    std::string_view m_texturePath = "";
+    sf::SoundBuffer m_soundBuffer;
+    sf::Sound m_projectileSound;
 
-    sf::SoundBuffer m_buffer;
-    std::string_view m_soundPath = "";
-
-    sf::Clock m_clock;
+    sf::Clock m_movementClock;
 
     sf::Vector2f m_velocity;
 
-    sf::Vector2f m_target;
-    sf::Vector2f m_start;
-
-    float m_bulletSpeed = DEFAULT_PROJECTILE_SPEED;
+    sf::Vector2f m_targetPosition;
+    sf::Vector2f m_launchPosition;
 };
 
 
 class Bullet final : public Projectile {
 public:
-    Bullet(const sf::Vector2f &launch, const sf::Vector2f &target) : Projectile(launch, target) {
-        setSound("resources/Wav/mini_gun2.wav");
+    constexpr static float kDefaultSpeed = 1000.0f;
 
-        setBulletSpeed(DEFAULT_SPEED);
-    }
-
-public:
-    constexpr static float DEFAULT_SPEED = 1000.0f;
+    Bullet(const sf::Vector2f &launch, const sf::Vector2f &target);
 };
 
 class Shell final : public Projectile {
 public:
-    Shell(const sf::Vector2f &launch, const sf::Vector2f &target) : Projectile(launch, target) {
-        setSound("resources/Wav/explosion.wav");
+    constexpr static float kDefaultSpeed = 500.0f;
 
-        setBulletSpeed(DEFAULT_SPEED);
-    }
-
-public:
-    constexpr static float DEFAULT_SPEED = 500.0f;
+    Shell(const sf::Vector2f &launch, const sf::Vector2f &target);
 };
 
 
