@@ -1,14 +1,16 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <deque>
+
 #include "entity/Projectile.h"
 #include "entity/Turret.h"
-#include "MovementVectors.h"
 #include "entity/Hull.h"
+
 #include "Config.h"
 #include "Cursor.h"
-#include <SFML/Audio.hpp>
-#include <list>
+#include "MovementVectors.h"
 
 
 class MainWindow {
@@ -36,5 +38,5 @@ private:
 
     Cursor m_cursor;
 
-    std::list<Projectile *> m_projectiles;
+    std::deque<Projectile *> m_projectiles;
 };

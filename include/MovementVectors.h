@@ -21,24 +21,3 @@ struct PolarVector {
     float radius = 1.0f;
     float angle = 0.0f;
 };
-
-class DirectionVector {
-public:
-    DirectionVector(const sf::Vector2f & start, const sf::Vector2f & end, const sf::Color & color = sf::Color::Red) {
-        m_line = sf::VertexArray(sf::Lines, VECTOR_POINTS_AMOUNT);
-        m_line[0].position = start;
-        m_line[0].color = color;
-        m_line[1].position = end;
-        m_line[1].color = color;
-    }
-
-    [[nodiscard]] sf::VertexArray getShape() const {
-        return m_line;
-    }
-
-public:
-    constexpr static uint16_t VECTOR_POINTS_AMOUNT = 2;
-
-private:
-    sf::VertexArray m_line;
-};

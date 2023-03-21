@@ -1,12 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
-#include "easylogging++.h"
-
-#include "MovementVectors.h"
 
 #include "entity/Hull.h"
-#include "Config.h"
 #include "entity/Turret.h"
+#include "Config.h"
+
+#include "easylogging++.h"
 
 
 Turret::Turret(const Hull &hull, const sf::Window &window) : kAttachedHull(hull), kAttachedWindow(window) {
@@ -22,7 +21,7 @@ void Turret::updateRotation() {
     // Calculate the angle between the turret and the mouse cursor
     const auto mousePosition = sf::Vector2f(sf::Mouse::getPosition(kAttachedWindow));
     const sf::Vector2f delta(mousePosition - getPosition());
-    const float angle = std::atan2(delta.y, delta.x) * 180.0f / static_cast<float>(M_PI);
+    const float angle = std::atan2(delta.y, delta.x) * 180.0f / static_cast<float>(3.14);
 
     m_isRotating = m_directionVector.angle != angle;
 
@@ -36,7 +35,7 @@ void Turret::draw(sf::RenderWindow &window) const {
 
 sf::Vector2f Turret::getMuzzlePosition() const {
     PolarVector vector = m_directionVector;
-    vector.radius *= m_texture.getSize().x * m_sprite.getScale().x / 2.f;
+    vector.radius *= m_texture.getSize().x * m_sprite.getScale().x / 2.0f;
     return getPosition() + vector.getDecartVector();
 }
 
