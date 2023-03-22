@@ -7,7 +7,8 @@ MainWindow::MainWindow() {
 
     m_window->setFramerateLimit(Configuration::MainWindow::FPS_LIMIT);
 
-    m_turret = std::make_unique<Turret>(m_tank, *m_window);
+    m_tank = std::make_unique<Hull>();
+    m_turret = std::make_unique<Turret>(*m_tank, *m_window);
 
     m_window->setMouseCursorVisible(false);
 }
@@ -27,7 +28,7 @@ void MainWindow::run() {
 
         m_cursor.setPosition(mousePosition);
 
-        m_tank.handlePlayerInputs();
+        m_tank->handlePlayerInputs();
 
         handleProjectiles(mousePosition);
 
@@ -36,13 +37,11 @@ void MainWindow::run() {
         draw();
 
         m_window->display();
-
-        m_clock.restart();
     }
 }
 
 void MainWindow::draw() {
-    m_window->draw(m_tank.getSprite());
+    m_window->draw(m_tank->getSprite());
     m_turret->draw(*m_window);
 
     m_window->draw(m_cursor.getSprite());
@@ -56,7 +55,7 @@ void MainWindow::handleProjectiles(const sf::Vector2f &mousePosition) {
     constexpr float mainWeaponReloadTime = 1.0f;
     if (sf::Mouse::isButtonPressed(Configuration::Controls::MAIN_WEAPON)) {
         if (m_shellClock.getElapsedTime().asSeconds() > mainWeaponReloadTime) {
-            m_projectiles.push_front(new Shell(m_turret->getMuzzlePosition(), mousePosition));
+            m_projectiles.push_front(std::make_unique<Shell>(m_turret->getMuzzlePosition(), mousePosition));
             m_shellClock.restart();
         }
     }
@@ -64,16 +63,17 @@ void MainWindow::handleProjectiles(const sf::Vector2f &mousePosition) {
     constexpr float altWeaponReloadTime = 0.15f;
     if (sf::Mouse::isButtonPressed(Configuration::Controls::ALTERNATIVE_WEAPON)) {
         if (m_bulletClock.getElapsedTime().asSeconds() > altWeaponReloadTime) {
-            m_projectiles.push_front(new Bullet(m_turret->getPosition(), mousePosition));
+            m_projectiles.push_front(std::make_unique<Bullet>(m_turret->getPosition(), mousePosition));
             m_bulletClock.restart();
         }
     }
 
-    for (const auto& projectile : m_projectiles) {
-        projectile->updatePosition();
+    while (!m_projectiles.empty() && !m_projectiles.front()->isWithinScreenBounds()) {
+        m_projectiles.front().reset();
+        m_projectiles.pop_front();
     }
 
-    while (!m_projectiles.empty() && !m_projectiles.front()->isWithinScreenBounds()) {
-        m_projectiles.pop_front();
+    for (const auto& projectile : m_projectiles) {
+        projectile->updatePosition();
     }
 }

@@ -27,16 +27,14 @@ private:
 
     std::unique_ptr<sf::RenderWindow> m_window;
 
-    sf::Clock m_clock;
-
     sf::Clock m_shellClock;
     sf::Clock m_bulletClock;
 
-    Hull m_tank;
+    std::unique_ptr<Hull> m_tank;
 
     std::unique_ptr<Turret> m_turret;
 
     Cursor m_cursor;
 
-    std::deque<Projectile *> m_projectiles;
+    std::deque<std::unique_ptr<Projectile>> m_projectiles;
 };
