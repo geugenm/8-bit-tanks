@@ -2,7 +2,9 @@
 
 This is a tank game developed using SFML and C++17. The game involves moving a tank around a window.
 
-![image](https://user-images.githubusercontent.com/60469435/225749069-7bf7260a-5276-4de8-9e3e-66337563aa11.png)
+![Screenshot_20230325_231931](https://user-images.githubusercontent.com/60469435/227739660-a278ecb5-f318-41b2-941d-64dc21386e7a.png)
+
+
 
 
 ## Features
