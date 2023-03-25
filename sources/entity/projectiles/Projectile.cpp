@@ -27,10 +27,6 @@ sf::Vector2f Projectile::getPosition() const {
     return m_projectileShape.getPosition();
 }
 
-sf::RectangleShape &Projectile::getShapeObject() {
-    return m_projectileShape;
-}
-
 void Projectile::setSpeed(const float &speed) {
     if (speed < 0.0f) {
         throw std::invalid_argument("Invalid projectile speed given");

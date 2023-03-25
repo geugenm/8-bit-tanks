@@ -6,10 +6,7 @@ class Cursor {
 public:
     Cursor();
 
-    void drawOn(sf::RenderWindow & window) {
-        setPosition(sf::Vector2f(sf::Mouse::getPosition(window)));
-        window.draw(m_sprite);
-    }
+    void drawOn(sf::RenderWindow & window);
 
 private:
     void setPosition(const sf::Vector2f &position);

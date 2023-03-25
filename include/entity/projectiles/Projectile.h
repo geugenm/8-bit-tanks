@@ -9,17 +9,21 @@
 
 class Projectile : public Entity {
 public:
-    void updatePosition();
-
     [[nodiscard]] bool isWithinScreenBounds() const;
 
     [[nodiscard]] sf::Vector2f getPosition() const;
 
-    sf::RectangleShape &getShapeObject();
+    void drawOn(sf::RenderWindow & window) {
+        window.draw(m_projectileShape);
+
+        updatePosition();
+    }
 
     virtual ~Projectile() = default;
 
 protected:
+    void updatePosition();
+
     explicit Projectile(const sf::Vector2f &launch, const sf::Vector2f &target);
 
     void setSpeed(const float &speed);

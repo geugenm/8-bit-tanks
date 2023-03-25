@@ -7,11 +7,14 @@
 #include "MovementVectors.h"
 #include "Hull.h"
 
-class Turret: public Entity {
+class Turret final: public Entity {
 public:
+    const Hull &kAttachedHull;
+
+
     explicit Turret(const Hull &hull);
 
-    void show(sf::RenderWindow &window);
+    void drawOn(sf::RenderWindow &window);
 
     [[nodiscard]] sf::Vector2f getMuzzlePosition() const;
 
@@ -32,14 +35,9 @@ private:
 
     void updateRotation(const sf::RenderWindow & window);
 
-
-    const Hull &kAttachedHull;
-
     PolarVector m_directionVector = {1.0f, 0.0f};
 
     sf::Texture m_texture;
-
-    bool m_isRotating = false;
 
     sf::Sprite m_sprite;
 };

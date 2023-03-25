@@ -27,3 +27,9 @@ void Cursor::buildSprite() {
     m_sprite.setScale(textureScale);
     m_sprite.setTexture(m_texture);
 }
+
+void Cursor::drawOn(sf::RenderWindow &window) {
+    window.draw(m_sprite);
+
+    setPosition(sf::Vector2f(sf::Mouse::getPosition(window)));
+}

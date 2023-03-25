@@ -12,7 +12,7 @@
 #include "MovementVectors.h"
 
 
-class MainWindow {
+class MainWindow final {
 public:
     MainWindow();
 

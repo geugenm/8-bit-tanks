@@ -6,7 +6,7 @@
 #include "entity/Entity.h"
 
 
-class Hull : public Entity {
+class Hull final: public Entity {
 public:
     constexpr static float kDefaultMovementSpeed = 1.0f;
     constexpr static float kDefaultRotationSpeed = 0.5f;
@@ -14,13 +14,19 @@ public:
 
     Hull();
 
-    [[nodiscard]] sf::Sprite getSprite() const;
+    void drawOn(sf::RenderWindow & window) {
+        window.draw(m_sprite);
+        updatePosition();
+    }
 
-    void handlePlayerInputsAndMove();
+    [[nodiscard]] sf::Sprite getSprite() const {
+        return m_sprite;
+    }
 
     void setTexture(const std::string_view &path);
 
 private:
+    void updatePosition();
 
     void buildSprite();
 

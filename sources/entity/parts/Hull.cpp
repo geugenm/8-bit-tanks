@@ -4,14 +4,9 @@
 
 Hull::Hull() {
     setTexture(Configuration::Textures::HULL);
-    buildSprite();
 }
 
-sf::Sprite Hull::getSprite() const {
-    return m_sprite;
-}
-
-void Hull::handlePlayerInputsAndMove() {
+void Hull::updatePosition() {
     const sf::Vector2f changeVector = m_facingDirection.getDecartVector() * m_movementSpeed;
 
     if (sf::Keyboard::isKeyPressed(Configuration::Controls::FORWARD)) {
@@ -37,6 +32,7 @@ void Hull::setTexture(const std::string_view &path) {
     }
 
     m_sprite.setTexture(m_texture);
+    buildSprite();
 }
 
 void Hull::buildSprite() {

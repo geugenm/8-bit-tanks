@@ -21,12 +21,10 @@ void Turret::updateRotation(const sf::RenderWindow & window) {
     const sf::Vector2f delta(mousePosition - getPosition());
     const float angle = std::atan2(delta.y, delta.x) * 180.0f / static_cast<float>(3.14);
 
-    m_isRotating = m_directionVector.angle != angle;
-
     rotate(angle);
 }
 
-void Turret::show(sf::RenderWindow &window) {
+void Turret::drawOn(sf::RenderWindow &window) {
     updateRotation(window);
     window.draw(m_sprite);
 }
@@ -55,7 +53,7 @@ void Turret::setTexture(const std::string_view &path) {
 }
 
 void Turret::rotate(const float &angle) {
-    if (m_isRotating == false) {
+    if (angle == m_directionVector.angle) {
         return;
     }
 
