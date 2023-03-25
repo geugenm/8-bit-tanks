@@ -8,7 +8,7 @@ class Hull {
 public:
     constexpr static float kDefaultMovementSpeed = 1.0f;
     constexpr static float kDefaultRotationSpeed = 0.5f;
-    constexpr static float kSpriteScale = 0.09f;
+    constexpr static float kSpriteScale = 2.0f;
 
     Hull();
 

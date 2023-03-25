@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <deque>
+#include <memory>
 
 #include "entity/Projectile.h"
 #include "entity/Turret.h"
