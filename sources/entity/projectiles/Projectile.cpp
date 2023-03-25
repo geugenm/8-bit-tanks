@@ -1,4 +1,4 @@
-#include "entity/Projectile.h"
+#include "entity/projectiles/Projectile.h"
 #include "easylogging++.h"
 
 Projectile::Projectile(const sf::Vector2f &launch, const sf::Vector2f &target) : m_targetPosition(target), m_launchPosition(launch) {

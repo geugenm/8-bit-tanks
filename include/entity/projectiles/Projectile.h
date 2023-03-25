@@ -1,10 +1,13 @@
+#pragma once
+
 #include <cmath>
-#include <Config.h>
+#include "Config.h"
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
-#include "entity/Turret.h"
+#include "../tanks/parts/Turret.h"
+#include "entity/Entity.h"
 
-class Projectile {
+class Projectile : public Entity {
 public:
     void updatePosition();
 
@@ -39,6 +42,7 @@ class Bullet final : public Projectile {
 public:
     constexpr static float kDefaultSpeed = 1000.0f;
 
+
     explicit Bullet(const sf::Vector2f &launch, const sf::Vector2f &target);
 
     explicit Bullet(const Turret &turret) : Bullet(turret.getPosition(),
@@ -49,6 +53,7 @@ public:
 class Shell final : public Projectile {
 public:
     constexpr static float kDefaultSpeed = 500.0f;
+
 
     Shell(const sf::Vector2f &launch, const sf::Vector2f &target);
 

@@ -3,8 +3,10 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include "MovementVectors.h"
+#include "entity/Entity.h"
 
-class Hull {
+
+class Hull : public Entity {
 public:
     constexpr static float kDefaultMovementSpeed = 1.0f;
     constexpr static float kDefaultRotationSpeed = 0.5f;
@@ -14,10 +16,11 @@ public:
 
     [[nodiscard]] sf::Sprite getSprite() const;
 
-    void handlePlayerInputs();
+    void handlePlayerInputsAndMove();
+
+    void setTexture(const std::string_view &path);
 
 private:
-    void loadTexture(const std::string_view &path);
 
     void buildSprite();
 
@@ -29,6 +32,4 @@ private:
     sf::Sprite m_sprite;
 
     PolarVector m_facingDirection = {1.0f, 0.0f};
-
-    bool m_wasMoved = false;
 };

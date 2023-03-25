@@ -21,11 +21,11 @@ add_library(lib.easyloggingpp STATIC ${EASYLOGGINGPP_SOURCES})
 target_include_directories(lib.easyloggingpp PUBLIC ${EASYLOGGINGPP_INCLUDE_DIR})
 
 # Get a list of all .cpp files in the sources directory
-file(GLOB SOURCES "sources/*.cpp")
-file(GLOB SOURCES_ENTITY "sources/entity/*.cpp")
+file(GLOB_RECURSE SOURCES "sources/*.cpp")
+file(GLOB_RECURSE SOURCES_ENTITY "sources/entity/*.cpp")
 
 # Add executable and link with SFML and easyloggingpp libraries
-add_executable(${PROJECT_NAME} ${SOURCES} ${SOURCES_ENTITY})
+add_executable(${PROJECT_NAME} ${SOURCES} ${SOURCES_ENTITY} include/entity/tanks/Tank.h include/entity/Entity.h)
 
 target_link_libraries(${PROJECT_NAME}
         sfml-system

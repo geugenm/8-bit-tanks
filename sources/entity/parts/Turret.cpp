@@ -1,23 +1,23 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
-#include "entity/Hull.h"
-#include "entity/Turret.h"
+#include "entity/tanks/parts/Hull.h"
+#include "entity/tanks/parts/Turret.h"
 #include "Config.h"
 
 #include "easylogging++.h"
 
 
-Turret::Turret(const Hull &hull, const sf::Window &window) : kAttachedHull(hull), kAttachedWindow(window) {
+Turret::Turret(const Hull &hull) : kAttachedHull(hull) {
     setTexture(Configuration::Textures::TURRET);
     buildSprite();
 }
 
-void Turret::updateRotation() {
+void Turret::updateRotation(const sf::RenderWindow & window) {
     m_sprite.setPosition(kAttachedHull.getSprite().getPosition());
 
     // Calculate the angle between the turret and the mouse cursor
-    const auto mousePosition = sf::Vector2f(sf::Mouse::getPosition(kAttachedWindow));
+    const auto mousePosition = sf::Vector2f(sf::Mouse::getPosition(window));
     const sf::Vector2f delta(mousePosition - getPosition());
     const float angle = std::atan2(delta.y, delta.x) * 180.0f / static_cast<float>(3.14);
 
@@ -26,7 +26,8 @@ void Turret::updateRotation() {
     rotate(angle);
 }
 
-void Turret::draw(sf::RenderWindow &window) const {
+void Turret::show(sf::RenderWindow &window) {
+    updateRotation(window);
     window.draw(m_sprite);
 }
 

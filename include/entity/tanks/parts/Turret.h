@@ -1,18 +1,17 @@
 #pragma once
 
+#include "entity/Entity.h"
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
 #include "MovementVectors.h"
 #include "Hull.h"
 
-class Turret {
+class Turret: public Entity {
 public:
-    explicit Turret(const Hull &hull, const sf::Window &window);
+    explicit Turret(const Hull &hull);
 
-    void updateRotation();
-
-    void draw(sf::RenderWindow &window) const;
+    void show(sf::RenderWindow &window);
 
     [[nodiscard]] sf::Vector2f getMuzzlePosition() const;
 
@@ -24,17 +23,17 @@ public:
         return m_directionVector.getDecartVector();
     }
 
-private:
     void setTexture(const std::string_view &path);
 
+private:
     void buildSprite();
 
     void rotate(const float &angle);
 
+    void updateRotation(const sf::RenderWindow & window);
+
 
     const Hull &kAttachedHull;
-
-    const sf::Window &kAttachedWindow;
 
     PolarVector m_directionVector = {1.0f, 0.0f};
 

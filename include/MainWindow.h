@@ -5,9 +5,7 @@
 #include <deque>
 #include <memory>
 
-#include "entity/Projectile.h"
-#include "entity/Turret.h"
-#include "entity/Hull.h"
+#include "entity/tanks/Tank.h"
 
 #include "Config.h"
 #include "Cursor.h"
@@ -23,19 +21,9 @@ public:
 private:
     void draw();
 
-    void handleProjectiles();
-
-
     std::unique_ptr<sf::RenderWindow> m_window;
 
-    sf::Clock m_shellClock;
-    sf::Clock m_bulletClock;
-
-    std::unique_ptr<Hull> m_tank;
-
-    std::unique_ptr<Turret> m_turret;
+    std::unique_ptr<KV1> m_tank;
 
     Cursor m_cursor;
-
-    std::deque<std::unique_ptr<Projectile>> m_projectiles;
 };

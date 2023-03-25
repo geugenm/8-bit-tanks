@@ -3,23 +3,20 @@
 #include "easylogging++.h"
 
 Cursor::Cursor() {
-    loadTexture(Configuration::Textures::CURSOR);
-    buildSprite();
+    setTexture(Configuration::Textures::CURSOR);
 }
 
 void Cursor::setPosition(const sf::Vector2f &position) {
     m_sprite.setPosition(position);
 }
 
-sf::Sprite Cursor::getSprite() const {
-    return m_sprite;
-}
-
-void Cursor::loadTexture(const std::string_view &path) {
+void Cursor::setTexture(const std::string_view &path) {
     if (m_texture.loadFromFile(path.data()) == false) {
         LOG(ERROR) << "Invalid cursor sprite: " << path;
         return;
     }
+
+    buildSprite();
 }
 
 void Cursor::buildSprite() {

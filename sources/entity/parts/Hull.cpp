@@ -1,9 +1,9 @@
-#include "entity/Hull.h"
+#include "entity/tanks/parts/Hull.h"
 #include "Config.h"
 #include "easylogging++.h"
 
 Hull::Hull() {
-    loadTexture(Configuration::Textures::HULL);
+    setTexture(Configuration::Textures::HULL);
     buildSprite();
 }
 
@@ -11,10 +11,7 @@ sf::Sprite Hull::getSprite() const {
     return m_sprite;
 }
 
-void Hull::handlePlayerInputs() {
-    const sf::Vector2f directionBeforeMovement = m_sprite.getPosition();
-    const float rotationBeforeMovement = m_sprite.getRotation();
-
+void Hull::handlePlayerInputsAndMove() {
     const sf::Vector2f changeVector = m_facingDirection.getDecartVector() * m_movementSpeed;
 
     if (sf::Keyboard::isKeyPressed(Configuration::Controls::FORWARD)) {
@@ -31,11 +28,9 @@ void Hull::handlePlayerInputs() {
     }
 
     m_facingDirection.angle = m_sprite.getRotation();
-    m_wasMoved =
-            directionBeforeMovement != m_sprite.getPosition() || rotationBeforeMovement != m_sprite.getRotation();
 }
 
-void Hull::loadTexture(const std::string_view &path) {
+void Hull::setTexture(const std::string_view &path) {
     if (m_texture.loadFromFile(path.data()) == false) {
         LOG(ERROR) << "Missing hull texture: " << path;
         return;
