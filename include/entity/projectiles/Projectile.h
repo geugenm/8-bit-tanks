@@ -13,13 +13,13 @@ public:
 
     [[nodiscard]] sf::Vector2f getPosition() const;
 
-    void drawOn(sf::RenderWindow & window) {
+    void drawOn(sf::RenderWindow & window) override {
         window.draw(m_projectileShape);
 
         updatePosition();
     }
 
-    virtual ~Projectile() = default;
+    ~Projectile() override = default;
 
 protected:
     void updatePosition();
@@ -52,6 +52,8 @@ public:
     explicit Bullet(const Turret &turret) : Bullet(turret.getPosition(),
                                                    turret.getMuzzlePosition() + turret.getDirectionVector()) {
     }
+
+    ~Bullet() override = default;
 };
 
 class Shell final : public Projectile {
@@ -64,6 +66,8 @@ public:
     explicit Shell(const Turret &turret) : Shell(turret.getMuzzlePosition(),
                                                    turret.getMuzzlePosition() + turret.getDirectionVector()) {
     }
+
+    ~Shell() override = default;
 };
 
 

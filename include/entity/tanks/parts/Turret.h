@@ -14,7 +14,11 @@ public:
 
     explicit Turret(const Hull &hull);
 
-    void drawOn(sf::RenderWindow &window);
+    ~Turret() override = default;
+
+
+
+    void drawOn(sf::RenderWindow &window) override;
 
     [[nodiscard]] sf::Vector2f getMuzzlePosition() const;
 
@@ -22,11 +26,10 @@ public:
 
     [[nodiscard]] sf::Sprite &getSprite();
 
-    [[nodiscard]] sf::Vector2f getDirectionVector() const {
-        return m_directionVector.getDecartVector();
-    }
+    [[nodiscard]] sf::Vector2f getDirectionVector() const;
 
     void setTexture(const std::string_view &path);
+
 
 private:
     void buildSprite();

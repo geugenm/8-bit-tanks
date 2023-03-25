@@ -13,7 +13,7 @@
 
 class Tank : public Entity {
 public:
-    void drawOn(sf::RenderWindow &window) {
+    void drawOn(sf::RenderWindow &window) override {
         m_hull->drawOn(window);
         m_turret->drawOn(window);
 
@@ -24,7 +24,7 @@ public:
         shoot();
     }
 
-    virtual ~Tank() = default;
+    ~Tank() override = default;
 
 protected:
     virtual void shoot() = 0;

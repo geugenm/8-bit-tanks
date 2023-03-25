@@ -68,3 +68,7 @@ void Turret::buildSprite() {
 
     m_sprite.setPosition(kAttachedHull.getSprite().getPosition());
 }
+
+sf::Vector2f Turret::getDirectionVector() const {
+    return m_directionVector.getDecartVector();
+}
