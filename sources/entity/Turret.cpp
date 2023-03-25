@@ -11,8 +11,6 @@
 Turret::Turret(const Hull &hull, const sf::Window &window) : kAttachedHull(hull), kAttachedWindow(window) {
     setTexture(Configuration::Textures::TURRET);
     buildSprite();
-
-    setRotationSound(Configuration::Sounds::TURRET_ROTATE);
 }
 
 void Turret::updateRotation() {
@@ -26,7 +24,6 @@ void Turret::updateRotation() {
     m_isRotating = m_directionVector.angle != angle;
 
     rotate(angle);
-    playRotationSound();
 }
 
 void Turret::draw(sf::RenderWindow &window) const {
@@ -54,27 +51,6 @@ void Turret::setTexture(const std::string_view &path) {
     }
 
     m_sprite.setTexture(m_texture);
-}
-
-void Turret::playRotationSound() {
-    if (m_isRotating == false) {
-        m_rotateSound.stop();
-        return;
-    }
-
-    if (m_rotateSound.getStatus() == sf::SoundSource::Playing) {
-        return;
-    }
-
-    m_rotateSound.play();
-}
-
-void Turret::setRotationSound(const std::string_view &path) {
-    if (m_rotateSoundBuffer.loadFromFile(path.data()) == false) {
-        LOG(ERROR) << "Missing turret rotation sound file: " << path;
-        return;
-    }
-    m_rotateSound.setBuffer(m_rotateSoundBuffer);
 }
 
 void Turret::rotate(const float &angle) {

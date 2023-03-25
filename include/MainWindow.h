@@ -23,7 +23,7 @@ public:
 private:
     void draw();
 
-    void handleProjectiles(const sf::Vector2f &mousePosition);
+    void handleProjectiles();
 
 
     std::unique_ptr<sf::RenderWindow> m_window;

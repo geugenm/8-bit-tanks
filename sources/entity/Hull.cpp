@@ -5,8 +5,6 @@
 Hull::Hull() {
     loadTexture(Configuration::Textures::HULL);
     buildSprite();
-
-    loadMovementSound(Configuration::Sounds::TANK_MOVEMENT);
 }
 
 sf::Sprite Hull::getSprite() const {
@@ -35,18 +33,6 @@ void Hull::handlePlayerInputs() {
     m_facingDirection.angle = m_sprite.getRotation();
     m_wasMoved =
             directionBeforeMovement != m_sprite.getPosition() || rotationBeforeMovement != m_sprite.getRotation();
-
-    playMovementSound();
-}
-
-void Hull::loadMovementSound(const std::string_view &path) {
-    if (m_movementSoundBuffer.loadFromFile(path.data()) == false) {
-        LOG(ERROR) << "Hull movement sound is not found";
-        return;
-    }
-
-    m_movementSound.setBuffer(m_movementSoundBuffer);
-    m_movementSound.setLoop(true);
 }
 
 void Hull::loadTexture(const std::string_view &path) {
@@ -56,19 +42,6 @@ void Hull::loadTexture(const std::string_view &path) {
     }
 
     m_sprite.setTexture(m_texture);
-}
-
-void Hull::playMovementSound() {
-    if (m_wasMoved == false) {
-        m_movementSound.stop();
-        return;
-    }
-
-    if (m_movementSound.getStatus() == sf::SoundSource::Playing) {
-        return;
-    }
-
-    m_movementSound.play();
 }
 
 void Hull::buildSprite() {

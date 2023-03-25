@@ -26,11 +26,4 @@ namespace Configuration {
         constexpr static std::string_view HULL = "resources/textures/KV-1/ww2_top_view_hull5.png";
         constexpr static std::string_view TURRET = "resources/textures/KV-1/ww2_top_view_turret5.png";
     }
-
-    namespace Sounds {
-        constexpr static std::string_view TANK_MOVEMENT = "resources/Wav/tank_move.wav";
-        constexpr static std::string_view SHELL_OUT = "resources/Wav/explosion.wav";
-        constexpr static std::string_view BULLET_OUT = "resources/Wav/mini_gun.wav";
-        constexpr static std::string_view TURRET_ROTATE = "resources/Wav/tank_tower.wav";
-    }
 };

@@ -30,7 +30,7 @@ void MainWindow::run() {
 
         m_tank->handlePlayerInputs();
 
-        handleProjectiles(mousePosition);
+        handleProjectiles();
 
         m_window->clear();
 
@@ -51,11 +51,11 @@ void MainWindow::draw() {
     }
 }
 
-void MainWindow::handleProjectiles(const sf::Vector2f &mousePosition) {
+void MainWindow::handleProjectiles() {
     constexpr float mainWeaponReloadTime = 1.0f;
     if (sf::Mouse::isButtonPressed(Configuration::Controls::MAIN_WEAPON)) {
         if (m_shellClock.getElapsedTime().asSeconds() > mainWeaponReloadTime) {
-            m_projectiles.push_front(std::make_unique<Shell>(m_turret->getMuzzlePosition(), mousePosition));
+            m_projectiles.push_front(std::make_unique<Shell>(*m_turret));
             m_shellClock.restart();
         }
     }
@@ -63,7 +63,7 @@ void MainWindow::handleProjectiles(const sf::Vector2f &mousePosition) {
     constexpr float altWeaponReloadTime = 0.15f;
     if (sf::Mouse::isButtonPressed(Configuration::Controls::ALTERNATIVE_WEAPON)) {
         if (m_bulletClock.getElapsedTime().asSeconds() > altWeaponReloadTime) {
-            m_projectiles.push_front(std::make_unique<Bullet>(m_turret->getPosition(), mousePosition));
+            m_projectiles.push_front(std::make_unique<Bullet>(*m_turret));
             m_bulletClock.restart();
         }
     }

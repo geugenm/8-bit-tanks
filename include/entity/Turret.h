@@ -8,11 +8,6 @@
 
 class Turret {
 public:
-    const Hull &kAttachedHull;
-
-    const sf::Window &kAttachedWindow;
-
-
     explicit Turret(const Hull &hull, const sf::Window &window);
 
     void updateRotation();
@@ -25,25 +20,25 @@ public:
 
     [[nodiscard]] sf::Sprite &getSprite();
 
+    [[nodiscard]] sf::Vector2f getDirectionVector() const {
+        return m_directionVector.getDecartVector();
+    }
+
 private:
     void setTexture(const std::string_view &path);
 
-    void playRotationSound();
-
     void buildSprite();
-
-    void setRotationSound(const std::string_view &path);
 
     void rotate(const float &angle);
 
 
+    const Hull &kAttachedHull;
+
+    const sf::Window &kAttachedWindow;
+
     PolarVector m_directionVector = {1.0f, 0.0f};
 
     sf::Texture m_texture;
-
-    sf::SoundBuffer m_rotateSoundBuffer;
-
-    sf::Sound m_rotateSound;
 
     bool m_isRotating = false;
 
