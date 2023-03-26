@@ -23,7 +23,7 @@ namespace Configuration {
 
     namespace Textures {
         constexpr static std::string_view CURSOR = "resources/cursor/attack.png";
-        constexpr static std::string_view HULL = "resources/textures/KV-1/ww2_top_view_hull5.png";
-        constexpr static std::string_view TURRET = "resources/textures/KV-1/ww2_top_view_turret5.png";
+        constexpr static std::string_view HULL = "resources/textures/KV-1/hull.png";
+        constexpr static std::string_view TURRET = "resources/textures/KV-1/turret.png";
     }
 };

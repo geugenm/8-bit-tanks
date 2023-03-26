@@ -25,7 +25,7 @@ file(GLOB_RECURSE SOURCES "sources/*.cpp")
 file(GLOB_RECURSE SOURCES_ENTITY "sources/entity/*.cpp")
 
 # Add executable and link with SFML and easyloggingpp libraries
-add_executable(${PROJECT_NAME} ${SOURCES} ${SOURCES_ENTITY} include/entity/tanks/Tank.h include/entity/Entity.h)
+add_executable(${PROJECT_NAME} ${SOURCES} ${SOURCES_ENTITY})
 
 target_link_libraries(${PROJECT_NAME}
         sfml-system

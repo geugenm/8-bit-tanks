@@ -13,6 +13,13 @@
 
 class Tank : public Entity {
 public:
+    static constexpr float kMainWeaponSecondsToReload = 1.0f;
+
+    static constexpr float kAltWeaponSecondsToReload = 0.15f;
+
+
+    ~Tank() override = default;
+
     void drawOn(sf::RenderWindow &window) override {
         m_hull->drawOn(window);
         m_turret->drawOn(window);
@@ -21,18 +28,15 @@ public:
             projectile->drawOn(window);
         }
 
-        shoot();
+        handleShoot();
     }
 
-    ~Tank() override = default;
-
 protected:
-    virtual void shoot() = 0;
-
     explicit Tank() {
         m_hull = std::make_unique<Hull>();
         m_turret = std::make_unique<Turret>(*m_hull);
     }
+
 
     void setHullTexture(const std::string_view &path) {
         m_hull->setTexture(path);
@@ -54,28 +58,7 @@ protected:
         return *m_hull;
     }
 
-private:
-    std::unique_ptr<Hull> m_hull;
-    std::unique_ptr<Turret> m_turret;
-
-    std::deque<std::unique_ptr<Projectile>> m_projectiles;
-};
-
-
-class KV1 final : public Tank {
-public:
-    static constexpr float kMainWeaponSecondsToReload = 1.0f;
-    static constexpr float kAltWeaponSecondsToReload = 0.15f;
-
-    explicit KV1() {
-        setHullTexture(Configuration::Textures::HULL);
-        setTurretTexture(Configuration::Textures::TURRET);
-    }
-
-    ~KV1() override = default;
-
-private:
-    void shoot() override {
+    void handleShoot() {
         if (sf::Mouse::isButtonPressed(Configuration::Controls::MAIN_WEAPON)) {
             if (m_shellClock.getElapsedTime().asSeconds() > kMainWeaponSecondsToReload) {
                 getProjectiles().push_front(std::make_unique<Shell>(getTurret()));
@@ -97,6 +80,22 @@ private:
     }
 
 private:
+    std::unique_ptr<Hull> m_hull;
+    std::unique_ptr<Turret> m_turret;
+
+    std::deque<std::unique_ptr<Projectile>> m_projectiles;
+
     sf::Clock m_shellClock;
     sf::Clock m_bulletClock;
+};
+
+
+class KV1 final : public Tank {
+public:
+    explicit KV1() {
+        setHullTexture(Configuration::Textures::HULL);
+        setTurretTexture(Configuration::Textures::TURRET);
+    }
+
+    ~KV1() override = default;
 };
